@@ -52,19 +52,21 @@ const MessageList: React.FC<MessageListProps> = ({
               className="suggestion-chip"
               onClick={() => onSendMessage?.("איפה יש רופא עיניים בשדרות")}
             >
-              איפה יש רופא עיניים בשדרות?
+              ?איפה יש רופא עיניים בשדרות
             </button>
             <button
               className="suggestion-chip"
-              onClick={() => onSendMessage?.("מתי נסגרת המשרפאה בשוהם היום?")}
+              onClick={() => onSendMessage?.("מתי נסגרת המרפאה בשוהם היום?")}
             >
-              מתי נסגרת המשרפאה בשוהם היום?
+              ?מתי נסגרת המשרפאה בשוהם היום{" "}
             </button>
             <button
               className="suggestion-chip"
-              onClick={() => onSendMessage?.("אלו בתי מרקחת פתוחים עכשיו בחיפה?")}
+              onClick={() =>
+                onSendMessage?.("אלו בתי מרקחת פתוחים עכשיו בחיפה?")
+              }
             >
-              אלו בתי מרקחת פתוחים עכשיו בחיפה?
+              ?אלו בתי מרקחת פתוחים עכשיו בחיפה
             </button>
           </div>
         </div>
