@@ -1,5 +1,5 @@
 import ChatInterface from './components/ChatInterface';
-import ClalitLogo from './assets/logos/clalit_logo.png';
+import ClalitLogo from './assets/logos/white_logo.png';
 import './App.css';
 
 function App() {
@@ -7,8 +7,8 @@ function App() {
     <div className="app">
       <header className="app-header">
         <div className="header-content">
+          <h1>עומר העוזר החדש לאיתור שירותים</h1>
           <img src={ClalitLogo} alt="כללית" className="logo" />
-          <h1>צ'אט מידע על שירותי כללית</h1>
         </div>
       </header>
       <main className="app-main">
