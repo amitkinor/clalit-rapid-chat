@@ -6,31 +6,20 @@
 }
 
 .app-header {
-  background: var(--gradient-primary);
-  color: var(--primary-white);
-  padding: 1rem;
+  background: var(--primary-white);
+  color: var(--text-dark);
+  padding: 0.5rem 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.app-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('./assets/backgroung%20colors/Clalit%20shapes%20CMYK_Page_2.jpg') no-repeat center;
-  background-size: cover;
-  opacity: 0.1;
-  z-index: 0;
-}
 
 .header-content {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 1rem;
   position: relative;
   z-index: 1;
@@ -39,16 +28,19 @@
 }
 
 .logo {
-  height: 40px;
+  height: 120px;
   width: auto;
-  filter: brightness(0) invert(1);
+  max-width: 400px;
+  object-fit: contain;
+  filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.2));
 }
 
 .app-header h1 {
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  color: var(--clalit-dark-blue);
+  text-shadow: none;
 }
 
 .app-main {
@@ -64,15 +56,17 @@
   }
   
   .app-header {
-    padding: 0.75rem;
+    padding: 0.4rem 0.75rem;
   }
   
   .header-content {
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.75rem;
   }
   
   .logo {
-    height: 32px;
+    height: 80px;
+    max-width: 250px;
   }
 }

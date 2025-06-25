@@ -1,40 +1,37 @@
-import React, { useState, useRef, useEffect } from 'react';
-import BotAvatar from '../assets/icons/001_NoHat.png';
+import React, { useState, useCallback } from 'react';
+import MessageList from './MessageList';
+import MessageInput from './MessageInput';
+import { MessageData } from './Message';
+import { useMessagePersistence } from '../hooks/useMessagePersistence';
 import './ChatInterface.css';
 
-interface Message {
-  id: string;
-  text: string;
-  isUser: boolean;
-  timestamp: Date;
-}
 
 const ChatInterface: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState('');
+  const { messages, addMessage, updateMessage, clearMessages, getMessageById } = useMessagePersistence();
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [retryAttempts, setRetryAttempts] = useState<Map<string, number>>(new Map());
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const sendMessage = useCallback(async (messageText: string, isRetry = false, originalMessageId?: string) => {
+    if (!messageText.trim() || isLoading) return;
 
-  const sendMessage = async () => {
-    if (!inputText.trim() || isLoading) return;
+    let userMessage: MessageData;
+    
+    if (isRetry && originalMessageId) {
+      // Update existing message status
+      updateMessage(originalMessageId, { status: 'sending' });
+    } else {
+      // Create new user message
+      userMessage = {
+        id: Date.now().toString(),
+        text: messageText.trim(),
+        isUser: true,
+        timestamp: new Date(),
+        status: 'sending',
+      };
+      addMessage(userMessage);
+    }
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputText.trim(),
-      isUser: true,
-      timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInputText('');
     setIsLoading(true);
 
     try {
@@ -43,110 +40,111 @@ const ChatInterface: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: userMessage.text }),
+        body: JSON.stringify({ message: messageText }),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
 
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: data.response,
+      // Update user message status to sent
+      if (!isRetry) {
+        updateMessage(userMessage!.id, { status: 'sent' });
+      }
+
+      // Add bot response
+      const botMessage: MessageData = {
+        id: (Date.now() + Math.random()).toString(),
+        text: data.response || 'מצטער, לא קיבלתי תגובה מהשרת.',
         isUser: false,
         timestamp: new Date(),
+        status: 'sent',
       };
 
-      setMessages(prev => [...prev, botMessage]);
+      setTimeout(() => {
+        addMessage(botMessage);
+      }, 500);
+
+      // Reset retry attempts for this message
+      if (originalMessageId) {
+        setRetryAttempts(prev => {
+          const newMap = new Map(prev);
+          newMap.delete(originalMessageId);
+          return newMap;
+        });
+      }
+
     } catch (error) {
       console.error('Failed to send message:', error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: 'מצטער, נתקלתי בשגיאה. אנא נסה שוב.',
-        isUser: false,
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      
+      const messageId = isRetry ? originalMessageId! : userMessage!.id;
+      const currentRetries = retryAttempts.get(messageId) || 0;
+      
+      if (currentRetries < 3) {
+        // Update message status to error
+        updateMessage(messageId, { status: 'error' });
+        
+        setRetryAttempts(prev => {
+          const newMap = new Map(prev);
+          newMap.set(messageId, currentRetries + 1);
+          return newMap;
+        });
+      } else {
+        // Max retries reached, show final error
+        const errorMessage: MessageData = {
+          id: (Date.now() + Math.random()).toString(),
+          text: 'מצטער, לא הצלחתי לשלוח את ההודעה לאחר מספר ניסיונות. אנא בדוק את החיבור לאינטרנט ונסה שוב.',
+          isUser: false,
+          timestamp: new Date(),
+          status: 'sent',
+        };
+        addMessage(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isLoading, retryAttempts]);
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
+  const handleRetryMessage = useCallback((messageId: string) => {
+    const message = getMessageById(messageId);
+    if (message && message.isUser) {
+      sendMessage(message.text, true, messageId);
     }
-  };
+  }, [getMessageById, sendMessage]);
+
+  const handleSendMessage = useCallback((messageText: string) => {
+    sendMessage(messageText);
+  }, [sendMessage]);
+
+  const handleClearChat = useCallback(() => {
+    if (window.confirm('האם אתה בטוח שברצונך למחוק את כל ההיסטוריה?')) {
+      clearMessages();
+    }
+  }, [clearMessages]);
 
   return (
     <div className="chat-interface">
-      <div className="messages-container">
-        {messages.length === 0 && (
-          <div className="welcome-message">
-            <h2>ברוכים הבאים לעומר , עוזר ה AI  החדש שלך למציאת שירותים בכללית</h2>
-            <p>איך אוכל לעזור לך עם השאלות הרפואיות שלך היום?</p>
-          </div>
-        )}
-        
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`message ${message.isUser ? 'user-message' : 'bot-message'}`}
-          >
-            {!message.isUser && (
-              <img src={BotAvatar} alt="עוזר רפואי" className="bot-avatar" />
-            )}
-            <div className="message-bubble">
-              <div className="message-content">
-                {message.text}
-              </div>
-              <div className="message-time">
-                {message.timestamp.toLocaleTimeString([], { 
-                  hour: '2-digit', 
-                  minute: '2-digit' 
-                })}
-              </div>
-            </div>
-          </div>
-        ))}
-        
-        {isLoading && (
-          <div className="message bot-message">
-            <img src={BotAvatar} alt="עוזר רפואי" className="bot-avatar" />
-            <div className="message-bubble">
-              <div className="message-content loading">
-                <div className="typing-indicator">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className="input-container">
-        <div className="input-wrapper">
-          <textarea
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="הקלד את ההודעה שלך כאן..."
-            rows={1}
-            disabled={isLoading}
-            className="message-input"
-          />
-          <button
-            onClick={sendMessage}
-            disabled={!inputText.trim() || isLoading}
-            className="send-button"
-          >
-            שלח
-          </button>
-        </div>
-      </div>
+      <MessageList 
+        messages={messages}
+        isLoading={isLoading}
+        onRetryMessage={handleRetryMessage}
+        onSendMessage={handleSendMessage}
+      />
+      <MessageInput 
+        onSendMessage={handleSendMessage}
+        disabled={isLoading}
+      />
+      {messages.length > 0 && (
+        <button 
+          className="clear-chat-button"
+          onClick={handleClearChat}
+          title="מחק היסטוריה"
+        >
+          🗑️ מחק שיחה
+        </button>
+      )}
     </div>
   );
 };

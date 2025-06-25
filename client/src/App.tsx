@@ -1,5 +1,5 @@
 import ChatInterface from './components/ChatInterface';
-import ClalitLogo from './assets/logos/Clalit_logo_2.png';
+import ClalitLogo from './assets/logos/clalit_logo.png';
 import './App.css';
 
 function App() {
