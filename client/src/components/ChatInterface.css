@@ -181,6 +181,7 @@
   gap: 0.75rem;
   align-items: flex-end;
   max-width: 100%;
+  direction: rtl;
 }
 
 .message-input {
@@ -220,6 +221,7 @@
   min-height: 44px;
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+  direction: ltr;
 }
 
 .send-button:hover:not(:disabled) {

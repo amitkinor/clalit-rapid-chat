@@ -174,10 +174,11 @@
 .send-icon {
   font-size: 1.1rem;
   transition: transform 0.2s ease;
+  transform: scaleX(-1);
 }
 
 .send-button.active:hover .send-icon {
-  transform: translateX(2px);
+  transform: scaleX(-1) translateX(2px);
 }
 
 .input-shortcuts {
