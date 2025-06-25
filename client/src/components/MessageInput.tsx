@@ -10,7 +10,7 @@ interface MessageInputProps {
 const MessageInput: React.FC<MessageInputProps> = ({ 
   onSendMessage, 
   disabled = false,
-  placeholder = "הקלידו את ההודעה שלך כאן..."
+  placeholder = "הקלידו את ההודעה שלכם כאן..."
 }) => {
   const [inputText, setInputText] = useState('');
   const [isComposing, setIsComposing] = useState(false);
@@ -65,6 +65,9 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
   return (
     <div className="message-input-container">
+      <div className="terms-link-container">
+        <a href="#" className="terms-link">תנאי שימוש</a>
+      </div>
       <div className="input-wrapper">
         <div className="textarea-container">
           <textarea
