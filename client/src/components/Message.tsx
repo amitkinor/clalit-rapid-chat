@@ -43,6 +43,16 @@ const Message: React.FC<MessageProps> = ({ message }) => {
             <span className="error-indicator">!</span>
           )}
         </div>
+        {!message.isUser && (
+          <div className="feedback-buttons">
+            <button className="feedback-button thumbs-up" title="תגובה חיובית">
+              👍
+            </button>
+            <button className="feedback-button thumbs-down" title="תגובה שלילית">
+              👎
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
