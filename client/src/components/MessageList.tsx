@@ -45,7 +45,7 @@ const MessageList: React.FC<MessageListProps> = ({
           <div className="welcome-avatar">
             <img src={HamudiIsrael} alt="חמודי ישראל" className="hamudi-icon" />
           </div>
-          <h2>ברוכים הבאים לעומר העוזר החדש מבית כללית איך אפשר לעזור היום?</h2>
+          <h2>?ברוכים הבאים לעומר העוזר החדש מבית כללית איך אפשר לעזור היום</h2>
 
           <div className="suggestions">
             <button
