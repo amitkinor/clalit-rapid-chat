@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import BotAvatar from '../assets/icons/001_NoHat.png';
 import './ChatInterface.css';
 
 interface Message {
@@ -81,7 +82,7 @@ const ChatInterface: React.FC = () => {
       <div className="messages-container">
         {messages.length === 0 && (
           <div className="welcome-message">
-            <h2>ברוכים הבאים לצ'אט הרפואי של כללית</h2>
+            <h2>ברוכים הבאים לעומר , עוזר ה AI  החדש שלך למציאת שירותים בכללית</h2>
             <p>איך אוכל לעזור לך עם השאלות הרפואיות שלך היום?</p>
           </div>
         )}
@@ -91,25 +92,33 @@ const ChatInterface: React.FC = () => {
             key={message.id}
             className={`message ${message.isUser ? 'user-message' : 'bot-message'}`}
           >
-            <div className="message-content">
-              {message.text}
-            </div>
-            <div className="message-time">
-              {message.timestamp.toLocaleTimeString([], { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-              })}
+            {!message.isUser && (
+              <img src={BotAvatar} alt="עוזר רפואי" className="bot-avatar" />
+            )}
+            <div className="message-bubble">
+              <div className="message-content">
+                {message.text}
+              </div>
+              <div className="message-time">
+                {message.timestamp.toLocaleTimeString([], { 
+                  hour: '2-digit', 
+                  minute: '2-digit' 
+                })}
+              </div>
             </div>
           </div>
         ))}
         
         {isLoading && (
           <div className="message bot-message">
-            <div className="message-content loading">
-              <div className="typing-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
+            <img src={BotAvatar} alt="עוזר רפואי" className="bot-avatar" />
+            <div className="message-bubble">
+              <div className="message-content loading">
+                <div className="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
             </div>
           </div>
