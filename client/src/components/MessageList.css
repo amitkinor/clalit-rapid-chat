@@ -49,8 +49,8 @@
 }
 
 .hamudi-icon {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   animation: bounce 2s ease-in-out infinite;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
@@ -75,7 +75,7 @@
 
 .welcome-message p {
   font-size: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
   color: var(--text-dark);
 }
 
@@ -147,8 +147,8 @@
   }
   
   .hamudi-icon {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
   }
   
   .suggestions {
