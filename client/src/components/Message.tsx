@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BotAvatar from '../assets/logos/white_lips.png';
 import './Message.css';
 
@@ -8,18 +8,29 @@ export interface MessageData {
   isUser: boolean;
   timestamp: Date;
   status?: 'sending' | 'sent' | 'error';
+  feedback?: 'up' | 'down' | null;
 }
 
 interface MessageProps {
   message: MessageData;
+  onFeedback?: (messageId: string, feedback: 'up' | 'down') => void;
 }
 
-const Message: React.FC<MessageProps> = ({ message }) => {
+const Message: React.FC<MessageProps> = ({ message, onFeedback }) => {
+  const [localFeedback, setLocalFeedback] = useState<'up' | 'down' | null>(message.feedback || null);
+
   const formatTime = (timestamp: Date) => {
     return timestamp.toLocaleTimeString([], { 
       hour: '2-digit', 
       minute: '2-digit' 
     });
+  };
+
+  const handleFeedback = (feedback: 'up' | 'down') => {
+    setLocalFeedback(feedback);
+    if (onFeedback) {
+      onFeedback(message.id, feedback);
+    }
   };
 
   return (
@@ -45,10 +56,18 @@ const Message: React.FC<MessageProps> = ({ message }) => {
         </div>
         {!message.isUser && (
           <div className="feedback-buttons">
-            <button className="feedback-button thumbs-up" title="תגובה חיובית">
+            <button 
+              className={`feedback-button thumbs-up ${localFeedback === 'up' ? 'selected' : ''}`}
+              title="תגובה חיובית"
+              onClick={() => handleFeedback('up')}
+            >
               👍
             </button>
-            <button className="feedback-button thumbs-down" title="תגובה שלילית">
+            <button 
+              className={`feedback-button thumbs-down ${localFeedback === 'down' ? 'selected' : ''}`}
+              title="תגובה שלילית"
+              onClick={() => handleFeedback('down')}
+            >
               👎
             </button>
           </div>

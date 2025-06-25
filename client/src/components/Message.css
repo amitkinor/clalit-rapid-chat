@@ -201,6 +201,23 @@
   background: rgba(239, 68, 68, 0.1);
 }
 
+.feedback-button.selected {
+  opacity: 1 !important;
+  transform: scale(1.1);
+}
+
+.feedback-button.thumbs-up.selected {
+  border-color: var(--clalit-green);
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--clalit-green);
+}
+
+.feedback-button.thumbs-down.selected {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
 @media (max-width: 768px) {
   .message {
     max-width: 90%;

@@ -9,6 +9,7 @@ interface MessageListProps {
   isLoading: boolean;
   onRetryMessage?: (messageId: string) => void;
   onSendMessage?: (message: string) => void;
+  onFeedback?: (messageId: string, feedback: 'up' | 'down') => void;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -16,6 +17,7 @@ const MessageList: React.FC<MessageListProps> = ({
   isLoading,
   onRetryMessage,
   onSendMessage,
+  onFeedback,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -74,7 +76,7 @@ const MessageList: React.FC<MessageListProps> = ({
 
       {messages.map((message) => (
         <div key={message.id} className="message-container">
-          <Message message={message} />
+          <Message message={message} onFeedback={onFeedback} />
           {message.status === "error" && (
             <button
               className="retry-button"

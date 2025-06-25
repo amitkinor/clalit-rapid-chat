@@ -134,6 +134,10 @@ const ChatInterface: React.FC = () => {
     sendMessage(messageText);
   }, [sendMessage]);
 
+  const handleFeedback = useCallback((messageId: string, feedback: 'up' | 'down') => {
+    updateMessage(messageId, { feedback });
+  }, [updateMessage]);
+
   const handleClearChat = useCallback(() => {
     if (window.confirm('האם אתה בטוח שברצונך למחוק את כל ההיסטוריה?')) {
       clearMessages();
@@ -147,6 +151,7 @@ const ChatInterface: React.FC = () => {
         isLoading={isLoading}
         onRetryMessage={handleRetryMessage}
         onSendMessage={handleSendMessage}
+        onFeedback={handleFeedback}
       />
       <MessageInput 
         onSendMessage={handleSendMessage}
