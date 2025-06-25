@@ -35,12 +35,28 @@ const ChatInterface: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Prepare conversation history including the new message
+      const conversationHistory = isRetry 
+        ? messages.map(msg => ({
+            text: msg.text,
+            isUser: msg.isUser,
+            timestamp: msg.timestamp.toISOString()
+          }))
+        : [...messages, userMessage!].map(msg => ({
+            text: msg.text,
+            isUser: msg.isUser,
+            timestamp: msg.timestamp.toISOString()
+          }));
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: messageText }),
+        body: JSON.stringify({ 
+          message: messageText,
+          conversation: conversationHistory 
+        }),
       });
 
       if (!response.ok) {
