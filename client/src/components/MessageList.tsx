@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import Message, { MessageData } from './Message';
-import TypingIndicator from './TypingIndicator';
-import HamudiIsrael from '../assets/icons/hamudi_israel.png';
-import './MessageList.css';
+import React, { useEffect, useRef } from "react";
+import Message, { MessageData } from "./Message";
+import TypingIndicator from "./TypingIndicator";
+import HamudiIsrael from "../assets/icons/hamudi_israel.png";
+import "./MessageList.css";
 
 interface MessageListProps {
   messages: MessageData[];
@@ -11,19 +11,19 @@ interface MessageListProps {
   onSendMessage?: (message: string) => void;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ 
-  messages, 
-  isLoading, 
+const MessageList: React.FC<MessageListProps> = ({
+  messages,
+  isLoading,
   onRetryMessage,
-  onSendMessage 
+  onSendMessage,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'end'
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
     });
   };
 
@@ -45,36 +45,36 @@ const MessageList: React.FC<MessageListProps> = ({
           <div className="welcome-avatar">
             <img src={HamudiIsrael} alt="חמודי ישראל" className="hamudi-icon" />
           </div>
-          <h2>ברוכים הבאים לעומר, עוזר ה-AI החדש שלך למציאת שירותים בכללית</h2>
-          <p>איך אוכל לעזור לך עם השאלות הרפואיות שלך היום?</p>
+          <h2>ברוכים הבאים לעומר העוזר החדש מבית כללית איך אפשר לעזור היום?</h2>
+
           <div className="suggestions">
-            <button 
+            <button
               className="suggestion-chip"
-              onClick={() => onSendMessage?.('איך לקבוע תור לרופא?')}
+              onClick={() => onSendMessage?.("איפה יש רופא עיניים בשדרות")}
             >
-              איך לקבוע תור לרופא?
+              איפה יש רופא עיניים בשדרות?
             </button>
-            <button 
+            <button
               className="suggestion-chip"
-              onClick={() => onSendMessage?.('מה שעות הפעילות של הקופה?')}
+              onClick={() => onSendMessage?.("מתי נסגרת המשרפאה בשוהם היום?")}
             >
-              מה שעות הפעילות של הקופה?
+              מתי נסגרת המשרפאה בשוהם היום?
             </button>
-            <button 
+            <button
               className="suggestion-chip"
-              onClick={() => onSendMessage?.('איך לחדש מרשם?')}
+              onClick={() => onSendMessage?.("אלו בתי מרקחת פתוחים עכשיו בחיפה?")}
             >
-              איך לחדש מרשם?
+              אלו בתי מרקחת פתוחים עכשיו בחיפה?
             </button>
           </div>
         </div>
       )}
-      
+
       {messages.map((message) => (
         <div key={message.id} className="message-container">
           <Message message={message} />
-          {message.status === 'error' && (
-            <button 
+          {message.status === "error" && (
+            <button
               className="retry-button"
               onClick={() => handleRetry(message.id)}
               title="נסה שוב"
@@ -84,9 +84,9 @@ const MessageList: React.FC<MessageListProps> = ({
           )}
         </div>
       ))}
-      
+
       {isLoading && <TypingIndicator />}
-      
+
       <div ref={messagesEndRef} />
     </div>
   );

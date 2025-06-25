@@ -10,7 +10,7 @@ interface MessageInputProps {
 const MessageInput: React.FC<MessageInputProps> = ({ 
   onSendMessage, 
   disabled = false,
-  placeholder = "הקלד את ההודעה שלך כאן..."
+  placeholder = "הקלידו את ההודעה שלך כאן..."
 }) => {
   const [inputText, setInputText] = useState('');
   const [isComposing, setIsComposing] = useState(false);
@@ -107,7 +107,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
             title="שלח הודעה (Enter)"
           >
             <span className="send-icon">➤</span>
-            <span className="send-text">שלח</span>
+            <span className="send-text">שלחו</span>
           </button>
         </div>
       </div>
