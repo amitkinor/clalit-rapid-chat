@@ -56,14 +56,14 @@ const MessageList: React.FC<MessageListProps> = ({
             </button>
             <button
               className="suggestion-chip"
-              onClick={() => onSendMessage?.("מתי נסגרת המרפאה בשוהם היום?")}
+              onClick={() => onSendMessage?.("מתי נסגרת המרפאה בשוהם היום")}
             >
               ?מתי נסגרת המשרפאה בשוהם היום{" "}
             </button>
             <button
               className="suggestion-chip"
               onClick={() =>
-                onSendMessage?.("אלו בתי מרקחת פתוחים עכשיו בחיפה?")
+                onSendMessage?.("אלו בתי מרקחת פתוחים עכשיו בחיפה")
               }
             >
               ?אלו בתי מרקחת פתוחים עכשיו בחיפה
