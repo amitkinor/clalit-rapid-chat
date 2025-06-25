@@ -35,6 +35,29 @@ app.post('/api/chat', (req, res) => {
   }, 1000 + Math.random() * 1000);
 });
 
+app.post('/api/feedback', (req, res) => {
+  const { messageId, messageText, feedbackType, feedbackText } = req.body;
+  
+  if (!messageId || !messageText || !feedbackType) {
+    return res.status(400).json({ error: 'נתונים חסרים' });
+  }
+
+  console.log('Feedback received:', {
+    messageId,
+    messageText,
+    feedbackType,
+    feedbackText: feedbackText || null,
+    timestamp: new Date().toISOString()
+  });
+
+  // Here you would typically save to database
+  res.json({ 
+    success: true,
+    message: 'המשוב נרשם בהצלחה',
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'healthy', timestamp: new Date().toISOString() });
 });

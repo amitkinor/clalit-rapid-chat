@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BotAvatar from '../assets/logos/white_lips.png';
+import FeedbackPopup from './FeedbackPopup';
 import './Message.css';
 
 export interface MessageData {
@@ -18,6 +19,7 @@ interface MessageProps {
 
 const Message: React.FC<MessageProps> = ({ message, onFeedback }) => {
   const [localFeedback, setLocalFeedback] = useState<'up' | 'down' | null>(message.feedback || null);
+  const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
 
   const formatTime = (timestamp: Date) => {
     return timestamp.toLocaleTimeString([], { 
@@ -26,11 +28,43 @@ const Message: React.FC<MessageProps> = ({ message, onFeedback }) => {
     });
   };
 
-  const handleFeedback = (feedback: 'up' | 'down') => {
-    setLocalFeedback(feedback);
-    if (onFeedback) {
-      onFeedback(message.id, feedback);
+  const sendFeedbackToServer = async (feedbackType: 'up' | 'down', feedbackText?: string) => {
+    try {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messageId: message.id,
+          messageText: message.text,
+          feedbackType,
+          feedbackText: feedbackText || null
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to send feedback:', error);
     }
+  };
+
+  const handleFeedback = (feedback: 'up' | 'down') => {
+    if (feedback === 'up') {
+      setLocalFeedback(feedback);
+      if (onFeedback) {
+        onFeedback(message.id, feedback);
+      }
+      sendFeedbackToServer('up');
+    } else {
+      setShowFeedbackPopup(true);
+    }
+  };
+
+  const handleThumbsDownSubmit = (feedbackText: string) => {
+    setLocalFeedback('down');
+    if (onFeedback) {
+      onFeedback(message.id, 'down');
+    }
+    sendFeedbackToServer('down', feedbackText);
   };
 
   return (
@@ -73,6 +107,12 @@ const Message: React.FC<MessageProps> = ({ message, onFeedback }) => {
           </div>
         )}
       </div>
+      
+      <FeedbackPopup
+        isOpen={showFeedbackPopup}
+        onClose={() => setShowFeedbackPopup(false)}
+        onSubmit={handleThumbsDownSubmit}
+      />
     </div>
   );
 };
