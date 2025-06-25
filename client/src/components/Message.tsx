@@ -1,5 +1,5 @@
 import React from 'react';
-import BotAvatar from '../assets/icons/001_NoHat.png';
+import BotAvatar from '../assets/logos/white_lips.png';
 import './Message.css';
 
 export interface MessageData {

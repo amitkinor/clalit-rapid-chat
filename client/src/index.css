@@ -30,7 +30,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--primary-white);
   color: var(--text-dark);
-  direction: rtl;
+  direction: ltr;
 }
 
 #root {
